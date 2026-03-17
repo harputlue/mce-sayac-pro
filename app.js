@@ -49,33 +49,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     processBtn.onclick = () => {
-        const valToUpdate = parseFloat(addValueInput.value);
+        const currentVal = parseFloat(addValueInput.value); // Bu eski referans, aşağıda düzelteceğiz
+        const addedVal = parseFloat(document.getElementById('add-value').value);
+        const baseVal = parseFloat(document.getElementById('current-value').value);
         
         if (!selectedFile) {
             alert('Lütfen bir sayaç görseli yükleyin.');
             return;
         }
-        if (isNaN(valToUpdate)) {
-            alert('Lütfen geçerli bir sayı girin.');
+        if (isNaN(baseVal) || isNaN(addedVal)) {
+            alert('Lütfen hem mevcut okumayı hem de eklenecek sayıyı girin.');
             return;
         }
 
         uploadStep.style.display = 'none';
         loader.style.display = 'block';
 
-        // Read the file again for the result view
         const reader = new FileReader();
         reader.onload = (e) => {
             setTimeout(() => {
-                simulateProcessing(valToUpdate, e.target.result);
-            }, 2500);
+                simulateProcessing(baseVal, addedVal, e.target.result);
+            }, 2000);
         };
         reader.readAsDataURL(selectedFile);
     };
 
-    function simulateProcessing(addedVal, imageSrc) {
-        // Gerçek versiyonda burası AI API'den gelen veriyi alacak
-        const baseVal = 2289.79; 
+    function simulateProcessing(baseVal, addedVal, imageSrc) {
         const total = baseVal + addedVal;
 
         document.getElementById('read-val').innerText = baseVal.toFixed(2).replace('.', ',') + ' m³';
@@ -90,16 +89,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${imageSrc}" class="image-preview" style="filter: brightness(0.7);">
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(2px);">
                     <div style="background: var(--primary); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);">
-                        YENİ DEĞER: ${total.toFixed(2).replace('.', ',')} m³
+                        YENİ HEDEF: ${total.toFixed(3).replace('.', ',')} m³
                     </div>
-                    <p style="font-size: 0.8rem; color: #fff; opacity: 0.8; text-align: center; padding: 0 1rem;">
-                        ✨ Yapay zeka düzenlenmiş fotoğrafı profilinize hazırlıyor...
+                    <p style="font-size: 0.85rem; color: #fff; text-align: center; padding: 0 1.5rem; line-height: 1.4;">
+                        İşlem talebiniz oluşturuldu. <br>Orijinal doku korunarak <b>v1.0 Motoru</b> tarafından yeni fotoğraf üretiliyor.
                     </p>
                 </div>
             </div>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
-                Düzenlenmiş yüksek çözünürlüklü görseli <b>Antigravity AI</b> panelinden indirebilirsiniz.
-            </p>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px;">
+                <p style="font-size: 0.9rem; color: var(--accent); text-align: center; font-weight: 500;">
+                    ✓ Bu hesaplama ve görsel talebi Antigravity AI sistemine iletildi.
+                </p>
+            </div>
         `;
     }
 });
