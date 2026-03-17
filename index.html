@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meter Pro | Akıllı Sayaç Güncelleyici</title>
+    <meta name="description" content="Sayaç fotoğraflarınızı otomatik analiz edin ve değer ekleyerek yeni görseller oluşturun.">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MCE Sayaç Pro v1.0</h1>
+            <p class="subtitle">Sayaç Görseli Analiz ve Güncelleme Aracı</p>
+        </header>
+
+        <main class="main-card">
+            <div id="upload-step">
+                <div class="upload-zone" id="drop-zone">
+                    <span class="upload-icon">📸</span>
+                    <h3>Sayaç Görselini Buraya Bırakın</h3>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Veya dosyalarınızdan seçmek için tıklayın</p>
+                    <input type="file" id="file-input" hidden accept="image/*">
+                </div>
+
+                <div class="input-group">
+                    <label for="add-value">Eklenecek Değer (m³)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="add-value" placeholder="Örn: 1.278" step="0.001">
+                    </div>
+                </div>
+
+                <button id="process-btn" class="primary-btn">
+                    <span>Hesapla ve Görsel Oluştur</span>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M5 12h14m-7-7l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="processing" id="loader">
+                <span class="loader"></span>
+                <h3>Yapay Zeka Analiz Ediyor...</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Sayaç okunuyor ve yeni görsel tasarlanıyor.</p>
+            </div>
+
+            <div class="results-section" id="results">
+                <div class="status-tag status-success">✓ İşlem Tamamlandı</div>
+                <h2>Güncelleme Özeti</h2>
+                
+                <div class="result-grid">
+                    <div class="result-card">
+                        <div class="result-label">Okunan Değer</div>
+                        <div class="result-value" id="read-val">----,---</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Yeni Toplam Değer</div>
+                        <div class="result-value" id="final-val">----,---</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <div class="result-label">Yeni Görsel Önizleme</div>
+                    <div id="image-container">
+                        <!-- Buraya js ile görsel gelecek -->
+                        <div style="aspect-ratio: 16/9; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                            Görsel Hazırlanıyor...
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="location.reload()" class="primary-btn" style="background: rgba(255,255,255,0.05); margin-top: 2rem; border: 1px solid var(--border);">
+                    Yeni İşlem Başlat
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
