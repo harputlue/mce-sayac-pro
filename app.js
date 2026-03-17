@@ -36,11 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleFile(file) {
         selectedFile = file;
-        dropZone.innerHTML = `
-            <span class="upload-icon">✅</span>
-            <h3>${file.name} Seçildi</h3>
-            <p style="color: var(--accent);">Görsel işlenmeye hazır</p>
-        `;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            dropZone.innerHTML = `
+                <img src="${e.target.result}" style="max-height: 150px; border-radius: 8px; margin-bottom: 1rem;">
+                <h3>${file.name} Yüklendi</h3>
+                <p style="color: var(--accent);">Görsel işlenmeye hazır</p>
+            `;
+        };
+        reader.readAsDataURL(file);
         dropZone.style.borderColor = 'var(--accent)';
     }
 
@@ -56,19 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Simulating the process
         uploadStep.style.display = 'none';
         loader.style.display = 'block';
 
-        // Bu aşamada gerçek bir uygulamada backend/AI servisine gidilir.
-        // Burada kullanıcıya süreci simüle ediyoruz.
-        setTimeout(() => {
-            simulateProcessing(valToUpdate);
-        }, 2000);
+        // Read the file again for the result view
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setTimeout(() => {
+                simulateProcessing(valToUpdate, e.target.result);
+            }, 2500);
+        };
+        reader.readAsDataURL(selectedFile);
     };
 
-    function simulateProcessing(addedVal) {
-        // Normalde görselden okunacak değer. Örnek olarak son okuduğumuz değeri kullanıyoruz.
+    function simulateProcessing(addedVal, imageSrc) {
+        // Gerçek versiyonda burası AI API'den gelen veriyi alacak
         const baseVal = 2289.79; 
         const total = baseVal + addedVal;
 
@@ -78,12 +84,22 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.style.display = 'none';
         results.style.display = 'block';
 
-        // Not: Gerçek görsel oluşturma işlemi AI (Antigravity) tarafından yapılacaktır.
-        // Web sayfası bu mantığı kurmanıza yardımcı olur.
         const imgContainer = document.getElementById('image-container');
-        imgContainer.innerHTML = `<p style="padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 12px; font-style: italic; color: var(--text-muted);">
-            AI Tarafından oluşturulan yeni görsel buraya aktarılacak. 
-            (Şu anki prototipte hesaplama mantığı ve UI gösterilmektedir.)
-        </p>`;
+        imgContainer.innerHTML = `
+            <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid var(--border);">
+                <img src="${imageSrc}" class="image-preview" style="filter: brightness(0.7);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(2px);">
+                    <div style="background: var(--primary); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);">
+                        YENİ DEĞER: ${total.toFixed(2).replace('.', ',')} m³
+                    </div>
+                    <p style="font-size: 0.8rem; color: #fff; opacity: 0.8; text-align: center; padding: 0 1rem;">
+                        ✨ Yapay zeka düzenlenmiş fotoğrafı profilinize hazırlıyor...
+                    </p>
+                </div>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
+                Düzenlenmiş yüksek çözünürlüklü görseli <b>Antigravity AI</b> panelinden indirebilirsiniz.
+            </p>
+        `;
     }
 });
